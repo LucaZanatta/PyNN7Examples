@@ -157,8 +157,7 @@ for i in range(len(IAddPost)):
 
 # Plastic Connections between pre_pop and post_pop
 stdp_model = sim.STDPMechanism(
-    timing_dependence=sim.SpikePairRule(tau_plus=20., tau_minus=20.0,
-                                        nearest=True),
+    timing_dependence=sim.SpikePairRule(tau_plus=20., tau_minus=20.0),
     weight_dependence=sim.AdditiveWeightDependence(w_min=0, w_max=0.01,
                                                    A_plus=0.02, A_minus=0.02)
 )
@@ -183,7 +182,7 @@ post_pop.record()
 # Run simulation
 sim.run(simtime)
 
-print("Weights:", plastic_projection.getWeights())
+#print("Weights:", plastic_projection.getWeights())
 
 
 def plot_spikes(spikes, title):
