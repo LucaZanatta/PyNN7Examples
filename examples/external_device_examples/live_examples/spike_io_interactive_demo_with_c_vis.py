@@ -3,9 +3,9 @@ import Tkinter as tk
 import pylab
 import spynnaker7.pyNN as Frontend
 
-import spynnaker_external_devices_plugin.pyNN as ExternalDevices
-from spynnaker_external_devices_plugin.pyNN.connections\
-    .spynnaker_live_spikes_connection import SpynnakerLiveSpikesConnection
+import spynnaker7_external_device_plugin.pyNN as ExternalDevices
+from spynnaker7_external_device_plugin.pyNN import \
+    SpynnakerLiveSpikesConnection
 
 
 class PyNNScript(object):
