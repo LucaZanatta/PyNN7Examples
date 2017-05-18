@@ -17,11 +17,11 @@ $Id$
 import pylab
 import spynnaker7.pyNN as sim
 
-import spynnaker_extra_pynn_models as q
+import spynnaker7_extra_pynn_models as q
 
 sim.setup(timestep=1.0, min_delay=1.0, max_delay=4.0)
 
-delta_cell = sim.Population(1, q.IF_curr_delta, {
+delta_cell = sim.Population(1, q.IFCurrDelta, {
     'i_offset': 0.1,
     'tau_refrac': 3.0,
     'v_thresh': -51.0,

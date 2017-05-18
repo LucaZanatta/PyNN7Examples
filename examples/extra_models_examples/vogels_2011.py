@@ -1,5 +1,5 @@
 import spynnaker7.pyNN as sim
-import spynnaker_extra_pynn_models as q
+import spynnaker7_extra_pynn_models as q
 import numpy
 import pylab
 
@@ -27,15 +27,14 @@ cell_params = {
 # (Number of inhibitory neurons is proportional to this)
 NUM_EXCITATORY = 2000
 
-# Reduce number of neurons to simulate on each core
-sim.set_number_of_neurons_per_core(sim.IF_curr_exp, 100)
-
-
 # Function to build the basic network - dynamics should be a PyNN synapse
 # dynamics object
 def build_network(dynamics):
     # SpiNNaker setup
     sim.setup(timestep=1.0, min_delay=1.0, max_delay=10.0)
+
+    # Reduce number of neurons to simulate on each core
+    sim.set_number_of_neurons_per_core(sim.IF_curr_exp, 10)
 
     # Create excitatory and inhibitory populations of neurons
     ex_pop = sim.Population(NUM_EXCITATORY, model, cell_params)
@@ -78,8 +77,7 @@ static_spikes = static_ex_pop.getSpikes(compatible_output=True)
 stdp_model = sim.STDPMechanism(
     timing_dependence=q.Vogels2011Rule(alpha=0.12, tau=20.0),
     weight_dependence=sim.AdditiveWeightDependence(w_min=0.0, w_max=1.0,
-                                                   A_plus=0.05),
-    mad=True)
+                                                   A_plus=0.05))
 
 # Build plastic network
 plastic_ex_pop, plastic_ie_projection = build_network(

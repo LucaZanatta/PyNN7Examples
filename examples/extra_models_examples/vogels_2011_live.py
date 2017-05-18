@@ -1,7 +1,7 @@
 
 import spynnaker7.pyNN as sim
-import spynnaker_extra_pynn_models as extra_sim
-import spynnaker_external_devices_plugin.pyNN as ext
+import spynnaker7_extra_pynn_models as extra_sim
+import spynnaker7_external_devices_plugin.pyNN as ext
 
 
 # -------------------------------------------------------------------
@@ -27,11 +27,11 @@ cell_params = {
 # (Number of inhibitory neurons is proportional to this)
 NUM_EXCITATORY = 2000
 
-# Reduce number of neurons to simulate on each core
-sim.set_number_of_neurons_per_core(sim.IF_curr_exp, 100)
-
 # SpiNNaker setup
 sim.setup(timestep=1.0, min_delay=1.0, max_delay=10.0)
+
+# Reduce number of neurons to simulate on each core
+sim.set_number_of_neurons_per_core(sim.IF_curr_exp, 100)
 
 # Create excitatory and inhibitory populations of neurons
 ex_pop = sim.Population(NUM_EXCITATORY, model, cell_params,
@@ -60,7 +60,6 @@ stdp_model = sim.STDPMechanism(
     timing_dependence=extra_sim.Vogels2011Rule(alpha=0.12, tau=20.0),
     weight_dependence=sim.AdditiveWeightDependence(w_min=0.0, w_max=1.0,
                                                    A_plus=0.0005),
-    mad=True
 )
 
 # Make inhibitory->excitatory projections

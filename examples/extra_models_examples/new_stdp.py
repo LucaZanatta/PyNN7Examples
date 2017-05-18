@@ -3,7 +3,7 @@
 Simple Associative Memory
 """
 import spynnaker7.pyNN as p
-import spynnaker_extra_pynn_models as q
+import spynnaker7_extra_pynn_models as q
 import pylab
 from pyNN.random import NumpyRNG, RandomDistribution
 
@@ -110,8 +110,7 @@ stdp_model = p.STDPMechanism(
         accumulator_depression=-6, accumulator_potentiation=3,
         mean_pre_window=10.0, mean_post_window=10.0, dual_fsm=True),
     weight_dependence=p.MultiplicativeWeightDependence(
-        w_min=0.0, w_max=16.0, A_plus=0.2, A_minus=0.2),
-    mad=True)
+        w_min=0.0, w_max=16.0, A_plus=0.2, A_minus=0.2))
 
 rng = NumpyRNG(seed=1)
 ext_delay_distr = RandomDistribution('normal', parameters=[1.5, 0.75],
