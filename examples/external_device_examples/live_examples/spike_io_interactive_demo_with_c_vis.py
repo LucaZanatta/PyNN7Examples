@@ -3,8 +3,8 @@ import Tkinter as tk
 import pylab
 import spynnaker7.pyNN as Frontend
 
-import spynnaker7_external_device_plugin.pyNN as ExternalDevices
-from spynnaker7_external_device_plugin.pyNN import \
+import spynnaker7_external_devices_plugin.pyNN as ExternalDevices
+from spynnaker7_external_devices_plugin.pyNN import \
     SpynnakerLiveSpikesConnection
 
 

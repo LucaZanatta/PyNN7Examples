@@ -5,7 +5,7 @@ import spynnaker7.pyNN as Frontend
 import time
 from threading import Condition
 
-import spynnaker_external_devices_plugin.pyNN as ExternalDevices
+import spynnaker7_external_devices_plugin.pyNN as ExternalDevices
 from spynnaker_external_devices_plugin.pyNN.connections \
     .spynnaker_live_spikes_connection import SpynnakerLiveSpikesConnection
 
