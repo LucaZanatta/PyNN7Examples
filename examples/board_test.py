@@ -41,6 +41,7 @@ def get_placement(population):
     subvertex = iter(subvertices).next()
     return spinnaker._placements.get_placement_of_subvertex(subvertex)
 
+
 errors = list()
 all_spikes = list()
 
@@ -115,5 +116,5 @@ for do_injector_first in [True, False]:
 if len(errors) == 0:
     print "No errors"
 else:
-    for (x, y, p, error) in sorted(errors, key=lambda e: (e[0], e[1], e[2])):
-        print "Error at core {}, {}, {}: {}".format(x, y, p, error)
+    for (x, y, pr, error) in sorted(errors, key=lambda e: (e[0], e[1], e[2])):
+        print "Error at core {}, {}, {}: {}".format(x, y, pr, error)

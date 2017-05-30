@@ -27,6 +27,7 @@ cell_params = {
 # (Number of inhibitory neurons is proportional to this)
 NUM_EXCITATORY = 2000
 
+
 # Function to build the basic network - dynamics should be a PyNN synapse
 # dynamics object
 def build_network(dynamics):

@@ -197,6 +197,7 @@ def plot_spikes(spikes, title):
     else:
         print "No spikes received"
 
+
 pre_spikes = pre_pop.getSpikes(compatible_output=True)
 post_spikes = post_pop.getSpikes(compatible_output=True)
 
