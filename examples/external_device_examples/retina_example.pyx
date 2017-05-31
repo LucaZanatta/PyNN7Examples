@@ -1,3 +1,5 @@
+BROKEN
+Also at: https://github.com/SpiNNakerManchester/sPyNNaker8ExternalDevicesPlugin/blob/master/intergration_tests/external_devices_examples/retina_example.py
 """
 retina example that just feeds data from a retina to live output via an
 intermediate population
@@ -18,6 +20,7 @@ connected_chip_details = {
 def get_updated_params(params):
     params.update(connected_chip_details)
     return params
+
 
 # Setup
 p.setup(timestep=1.0)
