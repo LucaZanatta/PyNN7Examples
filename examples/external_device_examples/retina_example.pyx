@@ -1,5 +1,5 @@
-#BROKEN
-
+BROKEN
+Also at: https://github.com/SpiNNakerManchester/sPyNNaker8ExternalDevicesPlugin/blob/master/intergration_tests/external_devices_examples/retina_example.py
 """
 retina example that just feeds data from a retina to live output via an
 intermediate population
