@@ -112,12 +112,12 @@ csvfile_parameter = "output_parameter.csv"
 with open(csvfile, "w") as output:
     writer = csv.writer(output, lineterminator='\n')
 for val in output_values:
-	writer.writerow(val)
+    writer.writerow(val)
 
 with open(csvfile_parameter, "w") as output:
     writer = csv.writer(output, lineterminator='\n')
 for val in testvalue:
-	writer.writerow([val])
+    writer.writerow([val])
 
 # end
 p.end()
