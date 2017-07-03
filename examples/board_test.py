@@ -1,4 +1,7 @@
-import pyNN.spiNNaker as p
+try:
+    import pyNN.spiNNaker as p
+except Exception as e:
+    import spynnaker7.pyNN as p
 import math
 
 n_neurons_per_pop = 1
