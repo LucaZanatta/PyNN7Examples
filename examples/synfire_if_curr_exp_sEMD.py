@@ -30,27 +30,27 @@ delay1 = 0.1
 delay2 = 2.0
 
 cell_params_lif = {'cm': cm, 'i_offset': i_offset, 'tau_m': tau_m,
-				'tau_refrac': tau_refrac, 'tau_syn_E': current_decay,
-				'tau_syn_I': current_decay, 'v_reset': v_reset,
-				'v_rest': v_rest, 'v_thresh': v_thresh
-				}
+				   'tau_refrac': tau_refrac, 'tau_syn_E': current_decay,
+				   'tau_syn_I': current_decay, 'v_reset': v_reset,
+				   'v_rest': v_rest, 'v_thresh': v_thresh
+				  }
 
 
 # neuron populations
 sEMD = p.Population(1, p.IF_curr_exp_sEMD, cell_params_lif, label="sEMD")
 input_first = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0]]},
-						label="input_first")
+						   label="input_first")
 input_second = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0]]},
-						label="input_second")
+						    label="input_second")
 
 
 # projections
 p.Projection(input_first, sEMD,
-			p.OneToOneConnector(weights=weight, delays=delay1),
-			target="excitatory")
+			 p.OneToOneConnector(weights=weight, delays=delay1),
+			 target="excitatory")
 p.Projection(input_second, sEMD,
-			p.OneToOneConnector(weights=weight, delays=delay2),
-			target="inhibitory")
+			 p.OneToOneConnector(weights=weight, delays=delay2),
+			 target="inhibitory")
 
 
 # records
@@ -73,8 +73,8 @@ time_voltage = [i[1] for i in v]
 membrane_voltage = [i[2] for i in v if i[0] == 0]
 
 time_current = [i[1] for i in currents]
-curr_exc =[i[2] for i in currents if i[0] == 0]
-curr_inh =[-i[3] for i in currents if i[0] == 0]
+curr_exc = [i[2] for i in currents if i[0] == 0]
+curr_inh = [-i[3] for i in currents if i[0] == 0]
 
 spike_time = [i[1] for i in spikes]
 spike_id = [i[0] for i in spikes]
@@ -88,7 +88,7 @@ ax2.text(0.2, 0.6, 'weights: ')
 ax2.text(0.2, 0.4, 'delay1: ')
 ax2.text(0.2, 0.2, 'delay2: ')
 
-ax2.text(run_time/2 , 0.8, current_decay)
+ax2.text(run_time/2, 0.8, current_decay)
 ax2.text(run_time/2, 0.6, weight)
 ax2.text(run_time/2, 0.4, delay1)
 ax2.text(run_time/2, 0.2, delay2)
@@ -102,23 +102,23 @@ ax3.set_title('spikes over time')
 pylab.show()
 
 # export csv files
-output_values = [membrane_voltage ,time_voltage , curr_exc, curr_inh,
-				time_current, spike_id, spike_time]
+output_values = [membrane_voltage, time_voltage, curr_exc, curr_inh,
+				 time_current, spike_id, spike_time]
 testvalue = [cm, i_offset, tau_m, tau_refrac, current_decay,
-			v_reset, v_rest, v_thresh]
+			 v_reset, v_rest, v_thresh]
 
 csvfile = "output.csv"
 csvfile_parameter = "output_parameter.csv"
 
 with open(csvfile, "w") as output:
-    writer = csv.writer(output, lineterminator='\n')
-    for val in output_values:
-        writer.writerow(val)
+	writer = csv.writer(output, lineterminator='\n')
+	for val in output_values:
+		writer.writerow(val)
 
 with open(csvfile_parameter, "w") as output:
-    writer = csv.writer(output, lineterminator='\n')
-    for val in testvalue:
-        writer.writerow([val])
+	writer = csv.writer(output, lineterminator='\n')
+	for val in testvalue:
+		writer.writerow([val])
 
 # end
 p.end()
