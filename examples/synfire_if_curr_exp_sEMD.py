@@ -29,33 +29,28 @@ weight = 1
 delay1 = 0.1
 delay2 = 2.0
 
-cell_params_lif = {'cm': cm,
-				'i_offset': i_offset,
-				'tau_m'     : tau_m,
-				'tau_refrac': tau_refrac,
-				'tau_syn_E' : current_decay,
-				'tau_syn_I' : current_decay,
-				'v_reset'   : v_reset,
-				'v_rest'    : v_rest,
-				'v_thresh'  : v_thresh
+cell_params_lif = {'cm': cm, 'i_offset': i_offset, 'tau_m': tau_m,
+				'tau_refrac': tau_refrac, 'tau_syn_E': current_decay,
+				'tau_syn_I': current_decay, 'v_reset': v_reset,
+				'v_rest': v_rest, 'v_thresh': v_thresh
 				}
 
 
 # neuron populations
-sEMD = p.Population(1, p.IF_curr_exp_sEMD, cell_params_lif, label = "sEMD")
+sEMD = p.Population(1, p.IF_curr_exp_sEMD, cell_params_lif, label="sEMD")
 input_first = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0]]},
-						label = "input_first")
+						label="input_first")
 input_second = p.Population(1, p.SpikeSourceArray, {'spike_times': [[0]]},
-						label = "input_second")
+						label="input_second")
 
 
 # projections
 p.Projection(input_first, sEMD,
-			p.OneToOneConnector(weights=weight,delays=delay1),
-			target = "excitatory")
-p.Projection(input_second,sEMD,
-			p.OneToOneConnector(weights=weight,delays=delay2),
-			target = "inhibitory")
+			p.OneToOneConnector(weights=weight, delays=delay1),
+			target="excitatory")
+p.Projection(input_second, sEMD,
+			p.OneToOneConnector(weights=weight, delays=delay2),
+			target="inhibitory")
 
 
 # records
@@ -84,7 +79,7 @@ curr_inh =[-i[3] for i in currents if i[0] == 0]
 spike_time = [i[1] for i in spikes]
 spike_id = [i[0] for i in spikes]
 
-f, ((ax1, ax2), (ax3, ax4)) = pylab.subplots(2, 2, sharex='col' )
+f, ((ax1, ax2), (ax3, ax4)) = pylab.subplots(2, 2, sharex='col')
 ax1.plot(time_voltage, membrane_voltage)
 ax1.set_title('membrane voltage over time')
 
