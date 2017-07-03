@@ -32,7 +32,7 @@ delay2 = 2.0
 cell_params_lif = {'cm': cm, 'i_offset': i_offset, 'tau_m': tau_m,
                    'tau_refrac': tau_refrac, 'tau_syn_E': current_decay,
                    'tau_syn_I': current_decay, 'v_reset': v_reset,
-                   'v_rest': v_rest, 'v_thresh': v_thresh }
+                   'v_rest': v_rest, 'v_thresh': v_thresh}
 
 
 # neuron populations
@@ -111,13 +111,13 @@ csvfile_parameter = "output_parameter.csv"
 
 with open(csvfile, "w") as output:
     writer = csv.writer(output, lineterminator='\n')
-	for val in output_values:
-		writer.writerow(val)
+for val in output_values:
+	writer.writerow(val)
 
 with open(csvfile_parameter, "w") as output:
     writer = csv.writer(output, lineterminator='\n')
-	for val in testvalue:
-		writer.writerow([val])
+for val in testvalue:
+	writer.writerow([val])
 
 # end
 p.end()
