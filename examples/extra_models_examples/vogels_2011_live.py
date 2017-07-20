@@ -1,7 +1,5 @@
 
 import spynnaker7.pyNN as sim
-import spynnaker7_extra_pynn_models as extra_sim
-import spynnaker7_external_devices_plugin.pyNN as ext
 
 
 # -------------------------------------------------------------------
@@ -57,7 +55,7 @@ sim.Projection(in_pop, in_pop,
 
 # Build inhibitory plasticity  model
 stdp_model = sim.STDPMechanism(
-    timing_dependence=extra_sim.Vogels2011Rule(alpha=0.12, tau=20.0),
+    timing_dependence=sim.extra_models.Vogels2011Rule(alpha=0.12, tau=20.0),
     weight_dependence=sim.AdditiveWeightDependence(w_min=0.0, w_max=1.0,
                                                    A_plus=0.0005),
 )
@@ -68,8 +66,8 @@ sim.Projection(in_pop, ex_pop, sim.FixedProbabilityConnector(0.02, weights=0),
                synapse_dynamics=sim.SynapseDynamics(slow=stdp_model))
 
 # Activate live output for excitatory spikes
-ext.activate_live_output_for(ex_pop)
-ext.activate_live_output_for(in_pop)
+sim.external_devices.activate_live_output_for(ex_pop)
+sim.external_devices.activate_live_output_for(in_pop)
 
 # Run simulation
 sim.run(5000)

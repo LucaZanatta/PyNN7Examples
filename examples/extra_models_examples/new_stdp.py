@@ -3,7 +3,6 @@
 Simple Associative Memory
 """
 import spynnaker7.pyNN as p
-import spynnaker7_extra_pynn_models as q
 import pylab
 from pyNN.random import NumpyRNG, RandomDistribution
 
@@ -106,7 +105,7 @@ populations.append(p.Population(nTeachNeurons, p.SpikeSourceArray,
                                 label='teaching_ss_array'))        # 3
 
 stdp_model = p.STDPMechanism(
-    timing_dependence=q.RecurrentRule(
+    timing_dependence=p.extra_models.RecurrentRule(
         accumulator_depression=-6, accumulator_potentiation=3,
         mean_pre_window=10.0, mean_post_window=10.0, dual_fsm=True),
     weight_dependence=p.MultiplicativeWeightDependence(
