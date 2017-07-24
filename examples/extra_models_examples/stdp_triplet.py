@@ -4,7 +4,6 @@ try:
     import pyNN.spiNNaker as sim
 except Exception as e:
     import spynnaker7.pyNN as sim
-    import spynnaker7_extra_pynn_models as extra_sim
 
 # -------------------------------------------------------------------
 # This example uses the sPyNNaker implementation of the triplet rule
@@ -80,9 +79,9 @@ for t in delta_t:
         # Plastic Connection between pre_pop and post_pop
         # Sjostrom visual cortex min-triplet params
         stdp_model = sim.STDPMechanism(
-            timing_dependence=extra_sim.PfisterSpikeTriplet(
+            timing_dependence=sim.extra_models.PfisterSpikeTriplet(
                 tau_plus=16.8, tau_minus=33.7, tau_x=101, tau_y=114),
-            weight_dependence=extra_sim.WeightDependenceAdditiveTriplet(
+            weight_dependence=sim.extra_models.WeightDependenceAdditiveTriplet(
                 w_min=0.0, w_max=1.0, A_plus=param_scale * 0.0,
                 A_minus=param_scale * 7.1e-3,
                 A3_plus=param_scale * 6.5e-3, A3_minus=param_scale * 0.0)
