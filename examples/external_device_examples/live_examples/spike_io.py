@@ -5,10 +5,6 @@ import spynnaker7.pyNN as Frontend
 import time
 from threading import Condition
 
-import spynnaker7_external_devices_plugin.pyNN as ExternalDevices
-from spynnaker_external_devices_plugin.pyNN.connections \
-    .spynnaker_live_spikes_connection import SpynnakerLiveSpikesConnection
-
 # boolean allowing users to use python or c vis
 using_c_vis = False
 
@@ -81,10 +77,10 @@ pop_backward = Frontend.Population(n_neurons, Frontend.IF_curr_exp,
 
 # Create injection populations
 injector_forward = Frontend.Population(
-    n_neurons, ExternalDevices.SpikeInjector,
+    n_neurons, Frontend.external_devices.SpikeInjector,
     cell_params_spike_injector_with_key, label='spike_injector_forward')
 injector_backward = Frontend.Population(
-    n_neurons, ExternalDevices.SpikeInjector,
+    n_neurons, Frontend.external_devices.SpikeInjector,
     cell_params_spike_injector, label='spike_injector_backward')
 
 # Create a connection from the injector into the populations
@@ -112,10 +108,10 @@ pop_forward.record()
 pop_backward.record()
 
 # Activate the sending of live spikes
-ExternalDevices.activate_live_output_for(
+Frontend.external_devices.activate_live_output_for(
     pop_forward, database_notify_host="localhost",
     database_notify_port_num=19996)
-ExternalDevices.activate_live_output_for(
+Frontend.external_devices.activate_live_output_for(
     pop_backward, database_notify_host="localhost",
     database_notify_port_num=19996)
 
@@ -160,9 +156,10 @@ def receive_spikes(label, time, neuron_ids):
 
 
 # Set up the live connection for sending spikes
-live_spikes_connection_send = SpynnakerLiveSpikesConnection(
-    receive_labels=None, local_port=19999,
-    send_labels=["spike_injector_forward", "spike_injector_backward"])
+live_spikes_connection_send = \
+    Frontend.external_devices.SpynnakerLiveSpikesConnection(
+        receive_labels=None, local_port=19999,
+        send_labels=["spike_injector_forward", "spike_injector_backward"])
 
 # Set up callbacks to occur at initialisation
 live_spikes_connection_send.add_init_callback(
@@ -181,9 +178,10 @@ if not using_c_vis:
     # if not using the c visualiser, then a new spynnaker live spikes
     # connection is created to define that there is a python function which
     # receives the spikes.
-    live_spikes_connection_receive = SpynnakerLiveSpikesConnection(
-        receive_labels=["pop_forward", "pop_backward"],
-        local_port=19996, send_labels=None)
+    live_spikes_connection_receive = \
+        Frontend.external_devices.SpynnakerLiveSpikesConnection(
+            receive_labels=["pop_forward", "pop_backward"],
+            local_port=19996, send_labels=None)
 
     # Set up callbacks to occur when spikes are received
     live_spikes_connection_receive.add_receive_callback(

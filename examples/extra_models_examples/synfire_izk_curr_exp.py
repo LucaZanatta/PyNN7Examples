@@ -37,8 +37,8 @@ for i in range(0, nNeurons):
 
 injectionConnection = [(0, 0, weight_to_spike, delay)]
 spikeArray = {'spike_times': [[50]]}
-populations.append(p.Population(nNeurons, p.IZK_curr_exp, cell_params_izk,
-                                label='pop_1'))
+populations.append(p.Population(nNeurons, p.extra_models.IZK_curr_exp,
+                                cell_params_izk, label='pop_1'))
 populations.append(p.Population(1, p.SpikeSourceArray, spikeArray,
                                 label='inputSpikes_1'))
 
