@@ -42,14 +42,14 @@ import spynnaker7.pyNN as sim
 
 # SpiNNaker setup
 sim.setup(timestep=1.0, min_delay=1.0, max_delay=10)
-sim.set_number_of_neurons_per_core("IF_curr_exp", 50)
+# sim.set_number_of_neurons_per_core("IF_curr_exp", 50)
 # +-------------------------------------------------------------------+
 # | General Parameters                                                |
 # +-------------------------------------------------------------------+
 
 # Population parameters
 model = sim.IF_curr_exp
-sim.set_number_of_neurons_per_core("IF_curr_exp", 50)
+sim.set_number_of_neurons_per_core("IF_curr_exp", 100)
 cell_params = {'cm': 0.25,
                'i_offset': 0.0,
                'tau_m': 20.0,
@@ -69,7 +69,8 @@ n_stim_test = 5
 n_stim_pairing = 20
 dur_stim = 20
 
-pop_size = 40
+pop_size = 14**2
+# pop_size=7**2
 
 ISI = 90.
 start_test_pre_pairing = 200.
@@ -167,12 +168,12 @@ stdp_model = sim.STDPMechanism(
                                                    A_plus=0.02, A_minus=0.02)
 )
 
-structure_model_w_stdp = sim.StructuralMechanism(stdp_model=stdp_model, weight=0.2, s_max=32)
-# structure_model_w_stdp = sim.StructuralMechanism(weight=.05)
+structure_model_w_stdp = sim.StructuralMechanism(stdp_model=stdp_model, weight=0.2, s_max=32,grid=[np.sqrt(pop_size), np.sqrt(pop_size)])
+# structure_model_w_stdp = sim.StructuralMechanism(weight=.1, s_max=32, grid=[pop_size, 1])
 
 plastic_projection = sim.Projection(
     # pre_pop, post_pop, sim.FixedNumberPreConnector(32),
-    pre_pop, post_pop, sim.FixedNumberPostConnector(20),  # TODO what about starting from 0?
+    pre_pop, post_pop, sim.FixedProbabilityConnector(0.1),  # TODO what about starting from 0?
     synapse_dynamics=sim.SynapseDynamics(slow=structure_model_w_stdp),
     label="plastic_projection"
 )
@@ -223,15 +224,25 @@ def plot_spikes(spikes, title):
     else:
         print "No spikes received"
 
+weights = plastic_projection._get_synaptic_data(False, 'weight')
 
 pre_spikes = pre_pop.getSpikes(compatible_output=True)
 post_spikes = post_pop.getSpikes(compatible_output=True)
-
+# End simulation on SpiNNaker
+sim.end()
 np.savez("structural_results_stdp", pre_spike=pre_spikes, post_spikes=post_spikes)
 
 plot_spikes(pre_spikes, "pre-synaptic")
 plot_spikes(post_spikes, "post-synaptic")
 pylab.show()
 
-# End simulation on SpiNNaker
-sim.end()
+
+
+f, ax1= pylab.subplots(1, 1, figsize=(8, 8))
+i = ax1.matshow(np.nan_to_num(weights.reshape(pop_size, pop_size)))
+ax1.grid(visible=False)
+ax1.set_title("Feedforward connectivity matrix", fontsize=16)
+cbar_ax = f.add_axes([.91, 0.155, 0.025, 0.72])
+cbar = f.colorbar(i, cax=cbar_ax)
+cbar.set_label("Synaptic conductance - $G_{syn}$", fontsize=16)
+pylab.show()
