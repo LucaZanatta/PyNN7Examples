@@ -8,7 +8,7 @@ except Exception as e:
 import pylab
 
 p.setup(timestep=1.0, min_delay=1.0, max_delay=32.0)
-p.set_number_of_neurons_per_core("IZK_curr_exp", 100)
+p.set_number_of_neurons_per_core(p.extra_models.IZK_curr_exp, 100)
 
 nNeurons = 200  # number of neurons in each population
 
