@@ -61,7 +61,7 @@ for i in range(n_pop):
         populations.append(p.Population(
             nNeurons, p.IF_curr_exp, cell_params_lif, label='pop_%d' % i))
         dual_stim_population = p.Population(
-            nNeurons, p.IF_curr_dual_exp, cell_params_lif_dual,
+            nNeurons, p.extra_models.IF_curr_dual_exp, cell_params_lif_dual,
             label='pop_dual_%d' % i)
     else:
         populations.append(p.Population(

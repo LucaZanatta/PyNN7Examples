@@ -1,5 +1,4 @@
 import spynnaker7.pyNN as sim
-import spynnaker7_extra_pynn_models as q
 import numpy
 import pylab
 
@@ -76,7 +75,7 @@ static_spikes = static_ex_pop.getSpikes(compatible_output=True)
 
 # Build inhibitory plasticity  model
 stdp_model = sim.STDPMechanism(
-    timing_dependence=q.Vogels2011Rule(alpha=0.12, tau=20.0),
+    timing_dependence=sim.extra_models.Vogels2011Rule(alpha=0.12, tau=20.0),
     weight_dependence=sim.AdditiveWeightDependence(w_min=0.0, w_max=1.0,
                                                    A_plus=0.05))
 
