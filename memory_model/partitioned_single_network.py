@@ -80,7 +80,7 @@ nSourceFiring  = int(nSourceNeurons * ProbFiring)
 nExcitFiring   = int(nExcitNeurons * ProbFiring)
 
 patternCycleTime = 35
-numPatterns = int(sys.argv[1])
+numPatterns = 2 #int(sys.argv[1])
 numRepeats  = 8 # was 8
 numRecallRepeats  = 2
 binSize = 4
@@ -114,7 +114,7 @@ nSourceFiring  = int(nSourceNeurons * ProbFiring)
 nExcitFiring   = int(nExcitNeurons * ProbFiring)
 
 patternCycleTime = 35
-numPatterns = int(sys.argv[1]) 
+numPatterns = 2#  int(sys.argv[1])
 numRepeats  = 15 # was 8
 numRecallRepeats  = 1
 binSize = 4
@@ -329,23 +329,23 @@ if True: # (weight stats)
    count_minus = 0
    weightUse = {}
    for i in range(numPartitions):
-       final_weights = projections[i].getWeights(format="array")
-       for row in final_weights:
-           partCount = 0
-           for j in row:
-              myString="%f"%j
-              #print "%f "%j
-              if myString in weightUse:
-                  weightUse[myString] += 1
-              else:
-                  weightUse[myString] = 1
-              if j > 0.0:
-                  count_plus += 1
-                  partCount += 1
-              if j <= 0.0:
-                  count_minus += 1
-           #print "%d " % partCount
-           #print "\n"
+       final_weights = projections[i].getWeights(format="list")
+       for j in final_weights:
+                partCount = 0
+            #for j in row:
+                myString=j
+                #print "%f "%j
+                if myString in weightUse:
+                    weightUse[myString] += 1
+                else:
+                    weightUse[myString] = 1
+                if j > 0.0:
+                    count_plus += 1
+                    partCount += 1
+                if j <= 0.0:
+                    count_minus += 1
+                print "%d " % partCount
+                print "\n"
        # Clear memory holding unneeded weight data:
        projections[i]._host_based_synapse_list = None
 
