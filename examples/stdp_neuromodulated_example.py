@@ -80,7 +80,6 @@ synapse_dynamics = sim.SynapseDynamics(slow=sim.STDPMechanism(
         tau_plus=2, tau_minus=1,
         tau_c=20.0, tau_d=5.0),
     weight_dependence=sim.AdditiveWeightDependence(),
-    mad=True,
     neuromodulation=True))
 
 # Create plastic connections between stimulation populations and observed
