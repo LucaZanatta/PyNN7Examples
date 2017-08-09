@@ -96,7 +96,7 @@ accPotThresholdExcit  = 4
 depressionRateExcit   = 0.0 # was 0.11 # 0.0  # was 0.4
 accDepThresholdExcit  = -4
 meanPreWindowExcit    = 18.0 # 8
-meanPostWindowExcit   = 10.0 # 8 
+meanPostWindowExcit   = 10.0 # 8
 maxWeightExcit        = 0.05
 minWeightExcit        = 0.00
 # Inhibitory:
@@ -121,9 +121,9 @@ binSize = 4
 numBins = patternCycleTime/binSize
 interPatternGap = 0    # was 10
 potentiationRate = 0.80
-accPotThreshold = 5 
+accPotThreshold = 5
 depressionRate = 0.40  # was 0.66
-accDepThreshold = -5 
+accDepThreshold = -5
 meanPostWindow = 8.0
 
 windowSz = 10.0 # tolerance for errors during recall
@@ -295,9 +295,9 @@ stdp_model = p.STDPMechanism(
             accum_dep_thresh_inhib = accDepThresholdInhib, accum_pot_thresh_inhib = accPotThresholdInhib,
                pre_window_tc_inhib = meanPreWindowInhib,     post_window_tc_inhib = meanPostWindowInhib),
 
-     weight_dependence = p.extra_models.WeightDependenceRecurrent(
-       w_min_excit = minWeightExcit, w_max_excit = maxWeightExcit, A_plus_excit = potentiationRateExcit, A_minus_excit = depressionRateExcit,
-       w_min_inhib = minWeightInhib, w_max_inhib = maxWeightInhib, A_plus_inhib = potentiationRateInhib, A_minus_inhib = depressionRateInhib),
+     weight_dependence = p.extra_models.WeightDependenceRecurrent(),
+       #w_min_excit = minWeightExcit, w_max_excit = maxWeightExcit, A_plus_excit = potentiationRateExcit, A_minus_excit = depressionRateExcit,
+       #w_min_inhib = minWeightInhib, w_max_inhib = maxWeightInhib, A_plus_inhib = potentiationRateInhib, A_minus_inhib = depressionRateInhib),
 
         dendritic_delay_fraction = dendriticDelayFraction)
 
