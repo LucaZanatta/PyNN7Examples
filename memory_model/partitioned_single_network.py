@@ -80,7 +80,7 @@ nSourceFiring  = int(nSourceNeurons * ProbFiring)
 nExcitFiring   = int(nExcitNeurons * ProbFiring)
 
 patternCycleTime = 35
-numPatterns = int(sys.argv[1])
+numPatterns = 2 #int(sys.argv[1])
 numRepeats  = 8 # was 8
 numRecallRepeats  = 2
 binSize = 4
@@ -114,7 +114,7 @@ nSourceFiring  = int(nSourceNeurons * ProbFiring)
 nExcitFiring   = int(nExcitNeurons * ProbFiring)
 
 patternCycleTime = 35
-numPatterns = int(sys.argv[1]) 
+numPatterns = 2#  int(sys.argv[1])
 numRepeats  = 15 # was 8
 numRecallRepeats  = 1
 binSize = 4
@@ -290,22 +290,16 @@ populations.append(p.Population(nTeachNeurons, p.SpikeSourceArray, teachingSpike
 
 stdp_model = p.STDPMechanism(
      timing_dependence = p.extra_models.RecurrentRule( accum_decay = accDecayPerSecond,
-            accum_dep_thresh_excit  = accDepThresholdExcit, accum_pot_thresh_excit  = accPotThresholdExcit,
-               pre_window_tc_excit  = meanPreWindowExcit,     post_window_tc_excit  = meanPostWindowExcit,
-            accum_dep_thresh_excit2 = accDepThresholdExcit, accum_pot_thresh_excit2 = accPotThresholdExcit,
-               pre_window_tc_excit2 = meanPreWindowExcit,     post_window_tc_excit2 = meanPostWindowExcit,
-            accum_dep_thresh_inhib  = accDepThresholdInhib, accum_pot_thresh_inhib  = accPotThresholdInhib,
-               pre_window_tc_inhib  = meanPreWindowInhib,     post_window_tc_inhib  = meanPostWindowInhib,
-            accum_dep_thresh_inhib2 = accDepThresholdInhib, accum_pot_thresh_inhib2 = accPotThresholdInhib,
-               pre_window_tc_inhib2 = meanPreWindowInhib,     post_window_tc_inhib2 = meanPostWindowInhib),
+            accum_dep_thresh_excit = accDepThresholdExcit, accum_pot_thresh_excit = accPotThresholdExcit,
+               pre_window_tc_excit = meanPreWindowExcit,     post_window_tc_excit = meanPostWindowExcit,
+            accum_dep_thresh_inhib = accDepThresholdInhib, accum_pot_thresh_inhib = accPotThresholdInhib,
+               pre_window_tc_inhib = meanPreWindowInhib,     post_window_tc_inhib = meanPostWindowInhib),
 
-     weight_dependence = p.extra_models.WeightDependenceRecurrent(),
-     #weight_dependence = p.extra_models.WeightDependenceRecurrent(
-     #  w_min_excit = minWeightExcit, w_max_excit = maxWeightExcit, A_plus_excit = potentiationRateExcit, A_minus_excit = depressionRateExcit,
-     #  w_min_excit2 = minWeightExcit, w_max_excit2 = maxWeightExcit, A_plus_excit2 = potentiationRateExcit, A_minus_excit2 = depressionRateExcit,
-     #  w_min_inhib = minWeightInhib, w_max_inhib = maxWeightInhib, A_plus_inhib = potentiationRateInhib, A_minus_inhib = depressionRateInhib,
-     #  w_min_inhib2 = minWeightInhib, w_max_inhib2 = maxWeightInhib, A_plus_inhib2 = potentiationRateInhib, A_minus_inhib2 = depressionRateInhib),
-     dendritic_delay_fraction = dendriticDelayFraction)
+     weight_dependence = p.extra_models.WeightDependenceRecurrent(
+       w_min_excit = minWeightExcit, w_max_excit = maxWeightExcit, A_plus_excit = potentiationRateExcit, A_minus_excit = depressionRateExcit,
+       w_min_inhib = minWeightInhib, w_max_inhib = maxWeightInhib, A_plus_inhib = potentiationRateInhib, A_minus_inhib = depressionRateInhib),
+
+        dendritic_delay_fraction = dendriticDelayFraction)
 
 #stdp_model = p.STDPMechanism( timing_dependence = q.RecurrentRule(accumulator_depression = accDepThreshold, accumulator_potentiation = accPotThreshold, mean_pre_window = meanPreWindow, mean_post_window = meanPostWindow, mean_inhib_pre_window = 12.0, dual_fsm=True), weight_dependence = p.MultiplicativeWeightDependence(w_min=min_weight, w_max=max_weight, A_plus=potentiationRate, A_minus=depressionRate, w_min_inhib = 0.1), mad=True, dendritic_delay_fraction = dendriticDelayFraction)
 
@@ -336,18 +330,22 @@ if True: # (weight stats)
    weightUse = {}
    for i in range(numPartitions):
        final_weights = projections[i].getWeights(format="list")
-       #for row in final_weights:
        for j in final_weights:
-              myString="%f"%j
-              #print "%f "%j
-              if myString in weightUse:
-                  weightUse[myString] += 1
-              else:
-                  weightUse[myString] = 1
-              if j > 0.0:
-                  count_plus += 1
-              if j <= 0.0:
-                  count_minus += 1
+                partCount = 0
+            #for j in row:
+                myString=j
+                #print "%f "%j
+                if myString in weightUse:
+                    weightUse[myString] += 1
+                else:
+                    weightUse[myString] = 1
+                if j > 0.0:
+                    count_plus += 1
+                    partCount += 1
+                if j <= 0.0:
+                    count_minus += 1
+                print "%d " % partCount
+                print "\n"
        # Clear memory holding unneeded weight data:
        projections[i]._host_based_synapse_list = None
 
