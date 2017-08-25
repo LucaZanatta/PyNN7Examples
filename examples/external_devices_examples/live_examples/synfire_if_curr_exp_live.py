@@ -2,9 +2,6 @@
 import spynnaker7.pyNN as p
 import pylab
 
-# Extra imports for external communication
-import spynnaker7_external_devices_plugin.pyNN as ExternalDevices
-
 # Define a synfire chain as usual
 p.setup(timestep=1.0, min_delay=1.0, max_delay=144.0)
 nNeurons = 200  # number of neurons in each population
