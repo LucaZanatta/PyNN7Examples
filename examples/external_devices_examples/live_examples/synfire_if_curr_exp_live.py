@@ -47,7 +47,7 @@ projections.append(p.Projection(populations[1], populations[0],
 populations[0].record()
 
 # Activate live output for the population
-ExternalDevices.activate_live_output_for(
+p.external_devices.activate_live_output_for(
     populations[0], database_notify_host="localhost",
     database_notify_port_num=19999)
 
