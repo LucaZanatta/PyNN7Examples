@@ -80,7 +80,7 @@ nSourceFiring  = int(nSourceNeurons * ProbFiring)
 nExcitFiring   = int(nExcitNeurons * ProbFiring)
 
 patternCycleTime = 35
-numPatterns = int(sys.argv[1])
+numPatterns = 2 #int(sys.argv[1])
 numRepeats  = 8 # was 8
 numRecallRepeats  = 2
 binSize = 4
@@ -132,16 +132,16 @@ nSourceFiring  = int(nSourceNeurons * ProbFiring)
 nExcitFiring   = int(nExcitNeurons * ProbFiring)
 
 patternCycleTime = 35
-numPatterns = int(sys.argv[1]) 
+numPatterns = 2#  int(sys.argv[1])
 numRepeats  = 15 # was 8
 numRecallRepeats  = 1
 binSize = 4
 numBins = patternCycleTime/binSize
 interPatternGap = 0    # was 10
 potentiationRate = 0.80
-accPotThreshold = 5 
+accPotThreshold = 5
 depressionRate = 0.40  # was 0.66
-accDepThreshold = -5 
+accDepThreshold = -5
 meanPostWindow = 8.0
 
 windowSz = 10.0 # tolerance for errors during recall
@@ -397,18 +397,22 @@ if True: # (weight stats)
    weightUse = {}
    for i in range(numPartitions):
        final_weights = projections[i].getWeights(format="list")
-       #for row in final_weights:
        for j in final_weights:
-              myString="%f"%j
-              #print "%f "%j
-              if myString in weightUse:
-                  weightUse[myString] += 1
-              else:
-                  weightUse[myString] = 1
-              if j > 0.0:
-                  count_plus += 1
-              if j <= 0.0:
-                  count_minus += 1
+                partCount = 0
+            #for j in row:
+                myString=j
+                #print "%f "%j
+                if myString in weightUse:
+                    weightUse[myString] += 1
+                else:
+                    weightUse[myString] = 1
+                if j > 0.0:
+                    count_plus += 1
+                    partCount += 1
+                if j <= 0.0:
+                    count_minus += 1
+                print "%d " % partCount
+                print "\n"
        # Clear memory holding unneeded weight data:
        projections[i]._host_based_synapse_list = None
 
