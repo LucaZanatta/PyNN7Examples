@@ -89,25 +89,43 @@ interPatternGap = 0    # was 10
 
 # -------------------------------------------------------------
 # Learning Parameters:
-accDecayPerSecond     = 1.0
-# Excitatory
-potentiationRateExcit = 1.0 # 1.0 # SD! was 0.8
-accPotThresholdExcit  = 4
-depressionRateExcit   = 0.0 # was 0.11 # 0.0  # was 0.4
-accDepThresholdExcit  = -4
-meanPreWindowExcit    = 18.0 # 8
-meanPostWindowExcit   = 10.0 # 8
-maxWeightExcit        = 0.05
-minWeightExcit        = 0.00
+accDecayPerSecond      = 1.0
+# Excitatory:
+potentiationRateExcit  = 1.0 # 1.0 # SD! was 0.8
+accPotThresholdExcit   = 1
+depressionRateExcit    = 2.0 # was 0.11 # 0.0  # was 0.4
+accDepThresholdExcit   = -2
+meanPreWindowExcit     = 18.0 # 8
+meanPostWindowExcit    = 10.0 # 8 
+maxWeightExcit         = 3.00
+minWeightExcit         = 4.00
+# Excitatory2:
+potentiationRateExcit2 = 5.0 # 1.0 # SD! was 0.8
+accPotThresholdExcit2  = 3
+depressionRateExcit2   = 6.0 # was 0.11 # 0.0  # was 0.4
+accDepThresholdExcit2  = -4
+meanPreWindowExcit2    = 11.0 # 8
+meanPostWindowExcit2   = 12.0 # 8 
+maxWeightExcit2        = 7.00
+minWeightExcit2        = 8.00
 # Inhibitory:
-potentiationRateInhib = 0.0
-accPotThresholdInhib  = 15
-depressionRateInhib   = 0.0
-accDepThresholdInhib  = -15
-meanPreWindowInhib    = 10.0
-meanPostWindowInhib   = 10.0
-maxWeightInhib        = 0.05  # was 0.1
-minWeightInhib        = 0.00
+potentiationRateInhib  = 9.0
+accPotThresholdInhib   = 5
+depressionRateInhib    = 10.0
+accDepThresholdInhib   = -6
+meanPreWindowInhib     = 6.0
+meanPostWindowInhib    = 7.0
+maxWeightInhib         = 11.00  # was 0.1
+minWeightInhib         = 12.00
+# Inhibitory2:
+potentiationRateInhib2 = 13.0
+accPotThresholdInhib2  = 7
+depressionRateInhib2   = 14.0
+accDepThresholdInhib2  = -8
+meanPreWindowInhib2    = 10.0
+meanPostWindowInhib2   = 10.0
+maxWeightInhib2        = 15.00  # was 0.1
+minWeightInhib2        = 16.00
 # -------------------------------------------------------------
 
 nSourceFiring  = int(nSourceNeurons * ProbFiring)
@@ -290,16 +308,62 @@ populations.append(p.Population(nTeachNeurons, p.SpikeSourceArray, teachingSpike
 
 stdp_model = p.STDPMechanism(
      timing_dependence = p.extra_models.RecurrentRule( accum_decay = accDecayPerSecond,
-            accum_dep_thresh_excit = accDepThresholdExcit, accum_pot_thresh_excit = accPotThresholdExcit,
-               pre_window_tc_excit = meanPreWindowExcit,     post_window_tc_excit = meanPostWindowExcit,
-            accum_dep_thresh_inhib = accDepThresholdInhib, accum_pot_thresh_inhib = accPotThresholdInhib,
-               pre_window_tc_inhib = meanPreWindowInhib,     post_window_tc_inhib = meanPostWindowInhib),
+            accum_dep_thresh_excit  = accDepThresholdExcit, accum_pot_thresh_excit  = accPotThresholdExcit,
+               pre_window_tc_excit  = meanPreWindowExcit,     post_window_tc_excit  = meanPostWindowExcit,
+            accum_dep_thresh_excit2 = accDepThresholdExcit2, accum_pot_thresh_excit2 = accPotThresholdExcit2,
+               pre_window_tc_excit2 = meanPreWindowExcit2,     post_window_tc_excit2 = meanPostWindowExcit2,
+            accum_dep_thresh_inhib  = accDepThresholdInhib, accum_pot_thresh_inhib  = accPotThresholdInhib,
+               pre_window_tc_inhib  = meanPreWindowInhib,     post_window_tc_inhib  = meanPostWindowInhib,
+            accum_dep_thresh_inhib2 = accDepThresholdInhib2, accum_pot_thresh_inhib2 = accPotThresholdInhib2,
+               pre_window_tc_inhib2 = meanPreWindowInhib2,     post_window_tc_inhib2 = meanPostWindowInhib2),
 
-     weight_dependence = p.extra_models.WeightDependenceRecurrent(),
-       #w_min_excit = minWeightExcit, w_max_excit = maxWeightExcit, A_plus_excit = potentiationRateExcit, A_minus_excit = depressionRateExcit,
-       #w_min_inhib = minWeightInhib, w_max_inhib = maxWeightInhib, A_plus_inhib = potentiationRateInhib, A_minus_inhib = depressionRateInhib),
+     #weight_dependence = p.extra_models.WeightDependenceRecurrent(),
+     weight_dependence = p.extra_models.WeightDependenceRecurrent(
+       w_min_excit = minWeightExcit, w_max_excit = maxWeightExcit, A_plus_excit = potentiationRateExcit, A_minus_excit = depressionRateExcit,
+       w_min_excit2 = minWeightExcit2, w_max_excit2 = maxWeightExcit2, A_plus_excit2 = potentiationRateExcit2, A_minus_excit2 = depressionRateExcit2,
+       w_min_inhib = minWeightInhib, w_max_inhib = maxWeightInhib, A_plus_inhib = potentiationRateInhib, A_minus_inhib = depressionRateInhib,
+       w_min_inhib2 = minWeightInhib2, w_max_inhib2 = maxWeightInhib2, A_plus_inhib2 = potentiationRateInhib2, A_minus_inhib2 = depressionRateInhib2),
+     dendritic_delay_fraction = dendriticDelayFraction)
 
-        dendritic_delay_fraction = dendriticDelayFraction)
+print "Learning params ****:"
+print "Acc decay per sec: ", accDecayPerSecond
+print "Excit  dep thresh: ", accDepThresholdExcit
+print "Excit  pot thresh: ", accPotThresholdExcit
+print "Excit  pre win tc: ", meanPreWindowExcit
+print "Excit  post win tc: ", meanPostWindowExcit
+print "Excit2 dep thresh: ", accDepThresholdExcit2
+print "Excit2 pot thresh: ", accPotThresholdExcit2
+print "Excit2 pre win tc: ", meanPreWindowExcit2
+print "Excit2 post win tc: ", meanPostWindowExcit2
+print "Inhib  dep thresh: ", accDepThresholdInhib
+print "Inhib  pot thresh: ", accPotThresholdInhib
+print "Inhib  pre win tc: ", meanPreWindowInhib
+print "Inhib  post win tc: ", meanPostWindowInhib
+print "Inhib2 dep thresh: ", accDepThresholdInhib2
+print "Inhib2 pot thresh: ", accPotThresholdInhib2
+print "Inhib2 pre win tc: ", meanPreWindowInhib2
+print "Inhib2 post win tc: ", meanPostWindowInhib2
+print
+print "Excit: w_min: ", minWeightExcit
+print "Excit: w_max: ", maxWeightExcit
+print "Excit: A_plus: ", potentiationRateExcit
+print "Excit: A_minus: ", depressionRateExcit
+print
+print "Excit2: w_min: ", minWeightExcit2
+print "Excit2: w_max: ", maxWeightExcit2
+print "Excit2: A_plus: ", potentiationRateExcit2
+print "Excit2: A_minus: ", depressionRateExcit2
+print
+print "Inhib: w_min: ", minWeightInhib
+print "Inhib: w_max: ", maxWeightInhib
+print "Inhib: A_plus: ", potentiationRateInhib
+print "Inhib: A_minus: ", depressionRateInhib
+print
+print "Inhib2: w_min: ", minWeightInhib2
+print "Inhib2: w_max: ", maxWeightInhib2
+print "Inhib2: A_plus: ", potentiationRateInhib2
+print "Inhib2: A_minus: ", depressionRateInhib2
+
 
 #stdp_model = p.STDPMechanism( timing_dependence = q.RecurrentRule(accumulator_depression = accDepThreshold, accumulator_potentiation = accPotThreshold, mean_pre_window = meanPreWindow, mean_post_window = meanPostWindow, mean_inhib_pre_window = 12.0, dual_fsm=True), weight_dependence = p.MultiplicativeWeightDependence(w_min=min_weight, w_max=max_weight, A_plus=potentiationRate, A_minus=depressionRate, w_min_inhib = 0.1), mad=True, dendritic_delay_fraction = dendriticDelayFraction)
 
@@ -309,6 +373,9 @@ for i in range(numPartitions):
       projections.append(p.Projection(populations[i], populations[excit], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
    else:
       projections.append(p.Projection(populations[i], populations[excit], p.FixedProbabilityConnector(p_connect=connProb, weights=baseline_excit_weight, delays=total_delay), target='excitatory', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
+      projections.append(p.Projection(populations[i], populations[excit], p.FixedProbabilityConnector(p_connect=connProb, weights=baseline_excit_weight, delays=total_delay), target='excitatory2', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
+      projections.append(p.Projection(populations[i], populations[excit], p.FixedProbabilityConnector(p_connect=connProb, weights=baseline_excit_weight, delays=total_delay), target='inhibitory', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
+      projections.append(p.Projection(populations[i], populations[excit], p.FixedProbabilityConnector(p_connect=connProb, weights=baseline_excit_weight, delays=total_delay), target='inhibitory2', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
 
 projections.append(p.Projection(populations[teacher], populations[excit], p.OneToOneConnector(weights=weight_to_force_firing, delays=timeStep), target='excitatory'))
 
