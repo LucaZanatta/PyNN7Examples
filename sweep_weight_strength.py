@@ -21,7 +21,7 @@ rng = NumpyRNG(seed=1)
 timeStep = 0.2
 
 p.setup(timestep=timeStep, min_delay = timeStep, max_delay = timeStep * 14)
-p.set_number_of_neurons_per_core("IF_curr_exp", 10)
+p.set_number_of_neurons_per_core("IF_curr_exp", 32)
 #p.set_number_of_neurons_per_core("IF_curr_comb_exp_2E2I", 150)
 p.set_number_of_neurons_per_core("SpikeSourceArray", 6000)
 
@@ -74,7 +74,7 @@ accPotThresholdExcit   = 20
 depressionRateExcit    = 0.0 # was 0.11 # 0.0  # was 0.4
 accDepThresholdExcit   = -18
 meanPreWindowExcit     = 15.0 # 8
-meanPostWindowExcit    = 1.0 # 8 
+meanPostWindowExcit    = 1.0 # 8
 maxWeightExcit         = 1.80
 minWeightExcit         = 0.00
 # Excitatory2:
@@ -83,7 +83,7 @@ accPotThresholdExcit2  = 20
 depressionRateExcit2   = 0.0 # was 0.11 # 0.0  # was 0.4
 accDepThresholdExcit2  = -8
 meanPreWindowExcit2    = 15.0 # 8
-meanPostWindowExcit2   = 1.0 # 8 
+meanPostWindowExcit2   = 1.0 # 8
 maxWeightExcit2        = 1.80
 minWeightExcit2        = 0.00
 # Inhibitory:
@@ -195,7 +195,7 @@ populations = list()
 projections = list()
 
 rateStep = 0.01
-  
+
 for i in range(numPartitions):
     rates = list()
     for j in range(sourcePartitionSz):
@@ -207,6 +207,7 @@ for i in range(numPartitions):
 # Construct Network
 
 populations.append(p.Population(nExcitNeurons, p.extra_models.IF_curr_comb_exp_2E2I, cell_params_lif_2E2I, label='excit_pop'))  # 2
+#populations.append(p.Population(nExcitNeurons, p.IF_curr_exp, {}, label='excit_pop'))  # 2
 
 stdp_model = p.STDPMechanism(
      timing_dependence = p.extra_models.RecurrentRule( accum_decay = accDecayPerSecond,
@@ -229,10 +230,11 @@ stdp_model = p.STDPMechanism(
 
 
 # Partition main projections into a number of sub-projections:
-#projections.append(p.Projection(populations[0], populations[1], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory'))
-projections.append(p.Projection(populations[0], populations[1], p.OneToOneConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory'))
+# projections.append(p.Projection(populations[0], populations[1], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory'))
+# projections.append(p.Projection(populations[0], populations[1], p.OneToOneConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory2'))
 
-#projections.append(p.Projection(populations[0], populations[1], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory2', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
+# projections.append(p.Projection(populations[0], populations[1], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory2', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
+# projections.append(p.Projection(populations[0], populations[1], p.OneToOneConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
 
 # XXXXXXXXXXXXXXXXXXXXX
 # Run network
@@ -320,7 +322,7 @@ if True:
           counts[int(neuronid)] = [entryCount, entryFirstSpikeTime, entryLastSpikeTime]
       # Calculate the mean rate for the entire block:
       meanRate = 1.0*totalSpikesThisBlock/sourcePartitionSz
-      # Now calculate mean interval for each neuron and the variance against the 
+      # Now calculate mean interval for each neuron and the variance against the
       # mean for the population:
       varianceTotal = 0
       for j in range(sourcePartitionSz):
@@ -389,7 +391,7 @@ if doPlots:
        pylab.title('Potential of neuron 1')
        for pos in range(1, nExcitNeurons, 35000):
            v_for_neuron = v[pos * ticks : (pos + 1) * ticks]
-           pylab.plot([i[1] for i in v_for_neuron], 
+           pylab.plot([i[1] for i in v_for_neuron],
                    [i[2] for i in v_for_neuron])
 
     if vgsyn is not None:
@@ -399,7 +401,7 @@ if doPlots:
        pylab.title('Gsyn of neuron 1')
        for pos in range(1, nExcitNeurons, 35000):
            v_for_neuron = vgsyn[(pos+1) * ticks : (pos + 2) * ticks]
-           pylab.plot([i[1] for i in v_for_neuron], 
+           pylab.plot([i[1] for i in v_for_neuron],
                    [i[2] for i in v_for_neuron])
 
     pylab.show()
