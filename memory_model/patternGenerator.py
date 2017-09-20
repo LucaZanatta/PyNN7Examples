@@ -27,20 +27,6 @@ class pattern(object):
            # Extract binned values from the spike train:
            self.extractBinnedValues(spikeTrain)
         
-    #def generateRandomPattern(self):
-    #    """
-    #    """
-    #    used = numpy.zeros(self.totalNeurons, dtype=numpy.int)
-    #    unordered_events = list()
-    #    for i in range(self.firing):
-    #        pick = randint(0, self.totalNeurons-1) 
-    #        while (used[pick] == 1):
-    #            pick = randint(0, self.totalNeurons-1) 
-    #        used[pick] = 1
-    #        eventTime = randint(0, self.cycleTime-1)
-    #        unordered_events.append((pick, eventTime))
-    #    self.events = numpy.sort(unordered_events, 0)
-
     def generateRandomPattern(self, rng):
         """
         """
@@ -79,10 +65,12 @@ class pattern(object):
         """
         """
         firingFrac = 100.0 * self.firing / self.totalNeurons
+        print "*************************"
         print "Total neurons: ", self.totalNeurons
         print "Firing: ", self.firing, "(", firingFrac, "%)"
         print "Cycle time: ", self.cycleTime, "ms"
         print self.events
+        print ""
 
     def patternGraphicalView(self, pattNum):
         if self.events != None:

@@ -30,9 +30,9 @@ p.set_number_of_neurons_per_core("IF_curr_exp", 150)
 #p.set_number_of_neurons_per_core("IF_curr_comb_exp_2E2I", 150)
 p.set_number_of_neurons_per_core("SpikeSourceArray", 6000)
 
-nSourceNeurons = 500 # number of input (excitatory) neurons
-nExcitNeurons  = 500 # number of excitatory neurons in the recurrent memory
-sourcePartitionSz = 50 # Number of spike sources in a single projection
+nSourceNeurons = 32000 # number of input (excitatory) neurons
+nExcitNeurons  = 32000 # number of excitatory neurons in the recurrent memory
+sourcePartitionSz = 500 # Number of spike sources in a single projection
 numPartitions = 1.0 * nSourceNeurons / sourcePartitionSz
 if numPartitions != int(numPartitions):
    print "Invalid partition size! Exiting!!!"
@@ -80,7 +80,7 @@ nSourceFiring  = int(nSourceNeurons * ProbFiring)
 nExcitFiring   = int(nExcitNeurons * ProbFiring)
 
 patternCycleTime = 35
-numPatterns = 2 #int(sys.argv[1])
+numPatterns = 100 #int(sys.argv[1])
 numRepeats  = 8 # was 8
 numRecallRepeats  = 2
 binSize = 4
@@ -91,23 +91,23 @@ interPatternGap = 0    # was 10
 # Learning Parameters:
 accDecayPerSecond      = 1.0
 # Excitatory:
-potentiationRateExcit  = 1.0 # 1.0 # SD! was 0.8
-accPotThresholdExcit   = 1
-depressionRateExcit    = 2.0 # was 0.11 # 0.0  # was 0.4
-accDepThresholdExcit   = -2
+potentiationRateExcit  = 0.8 # 1.0 # SD! was 0.8
+accPotThresholdExcit   = 4
+depressionRateExcit    = 0.2 # was 0.11 # 0.0  # was 0.4
+accDepThresholdExcit   = -5
 meanPreWindowExcit     = 18.0 # 8
 meanPostWindowExcit    = 10.0 # 8 
-maxWeightExcit         = 3.00
-minWeightExcit         = 4.00
+maxWeightExcit         = 1.00
+minWeightExcit         = 0.00
 # Excitatory2:
-potentiationRateExcit2 = 5.0 # 1.0 # SD! was 0.8
-accPotThresholdExcit2  = 3
-depressionRateExcit2   = 6.0 # was 0.11 # 0.0  # was 0.4
-accDepThresholdExcit2  = -4
+potentiationRateExcit2 = 0.8 # 1.0 # SD! was 0.8
+accPotThresholdExcit2  = 4
+depressionRateExcit2   = 0.2 # was 0.11 # 0.0  # was 0.4
+accDepThresholdExcit2  = -5
 meanPreWindowExcit2    = 11.0 # 8
 meanPostWindowExcit2   = 12.0 # 8 
-maxWeightExcit2        = 7.00
-minWeightExcit2        = 8.00
+maxWeightExcit2        = 1.00
+minWeightExcit2        = 0.00
 # Inhibitory:
 potentiationRateInhib  = 9.0
 accPotThresholdInhib   = 5
@@ -146,11 +146,14 @@ meanPostWindow = 8.0
 
 windowSz = 10.0 # tolerance for errors during recall
 
-baseline_excit_weight = 0.0
+baseline_excit_weight = 1.0
 weight_to_force_firing = 18.0
 # Max_weight for 30K neurons: 0.18, for 40K neurons: 0.135
 max_weight = 0.6 # was 0.25          # 0.8               # Max weight! was 0.66 in best run so far
 min_weight = 0.0
+#--- How much charge in one spike with appropriate diff-of-Gaussians shape?
+   T1 = 0.5; T2 = 0.224; a1 = 3.5; a2 = 3.5 # Gives Same shape and size as Kunkel, Diesman Alpha synapse
+
 print "Pattern cycle time: ", patternCycleTime
 
 print "Source neurons: ", nSourceNeurons
@@ -180,8 +183,8 @@ cell_params_lif_2E2I   = {'cm'        : 0.25, # nF was 0.25
                      'i_offset'  : 0.0,
                      'tau_m'     : 10.0,
                      'tau_refrac': 2.0,
-                     'exc_a_tau' : 2.0,
-                     'exc_b_tau' : 0.2,
+                     'exc_a_tau' : T2,
+                     'exc_b_tau' : T1,
                      'inh_a_tau' : 2.0,
                      'inh_b_tau' : 0.2,
                      'v_reset'   : -10.0,

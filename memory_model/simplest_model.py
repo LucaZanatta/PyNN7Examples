@@ -17,7 +17,7 @@ from pyNN.random import NumpyRNG, RandomDistribution
 numpy.random.seed(seed=1)
 rng = NumpyRNG(seed=1)
 
-timeStep = 0.2
+timeStep = 1.0
 
 p.setup(timestep=timeStep, min_delay = timeStep, max_delay = timeStep * 14)
 p.set_number_of_neurons_per_core("IF_curr_exp", 150)
@@ -68,8 +68,8 @@ weight_i2i     = 0.15
 # Learning Parameters:
 accDecayPerSecond      = 1.0
 # Excitatory:
-potentiationRateExcit  = 0.0 # 1.0 # SD! was 0.8
-accPotThresholdExcit   = 20
+potentiationRateExcit  = 0.8 # 1.0 # SD! was 0.8
+accPotThresholdExcit   = 3
 depressionRateExcit    = 0.0 # was 0.11 # 0.0  # was 0.4
 accDepThresholdExcit   = -18
 meanPreWindowExcit     = 15.0 # 8
@@ -77,7 +77,7 @@ meanPostWindowExcit    = 1.0 # 8
 maxWeightExcit         = 1.80
 minWeightExcit         = 0.00
 # Excitatory2:
-potentiationRateExcit2 = 0.0 # 1.0 # SD! was 0.8
+potentiationRateExcit2 = 0.8 # 1.0 # SD! was 0.8
 accPotThresholdExcit2  = 2
 depressionRateExcit2   = 0.0 # was 0.11 # 0.0  # was 0.4
 accDepThresholdExcit2  = -8
@@ -162,10 +162,15 @@ stdp_model = p.STDPMechanism(
        w_min_inhib2 = minWeightInhib2, w_max_inhib2 = maxWeightInhib2, A_plus_inhib2 = potentiationRateInhib2, A_minus_inhib2 = depressionRateInhib2),
      dendritic_delay_fraction = dendriticDelayFraction)
 
+#stdp_model = p.STDPMechanism(
+#    timing_dependence=p.SpikePairRule(tau_plus=20., tau_minus=20.0),
+#    weight_dependence=p.AdditiveWeightDependence(w_min=0, w_max=0.9, A_plus=0.02, A_minus=0.02)
+#)
+
 
 # Partition main projections into a number of sub-projections:
-projections.append(p.Projection(populations[0], populations[1], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory2'))
-#projections.append(p.Projection(populations[0], populations[1], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory2', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
+#projections.append(p.Projection(populations[0], populations[1], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory2'))
+projections.append(p.Projection(populations[0], populations[1], p.AllToAllConnector(weights=baseline_excit_weight, delays=total_delay), target='excitatory2', synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
 
 # XXXXXXXXXXXXXXXXXXXXX
 # Run network
