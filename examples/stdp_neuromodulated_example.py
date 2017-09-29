@@ -68,10 +68,10 @@ for i in range(10):
     post_pops.append(sim.Population(1, sim.IF_curr_exp_supervision,
         cell_params, label='post'))
     reward_projections.append(sim.Projection(reward_pop, post_pops[i],
-        sim.OneToOneConnector(weights=0.001),
+        sim.OneToOneConnector(weights=0.0001),
         target='reward', label='reward synapses'))
     punishment_projections.append(sim.Projection(punishment_pop, post_pops[i],
-        sim.OneToOneConnector(weights=0.0005),
+        sim.OneToOneConnector(weights=0.00005),
         target='punishment', label='punishment synapses'))
 
 # Create synapse dynamics with neuromodulated STDP.
@@ -79,7 +79,8 @@ synapse_dynamics = sim.SynapseDynamics(slow=sim.STDPMechanism(
     timing_dependence=sim.SpikePairRule(
         tau_plus=2, tau_minus=1,
         tau_c=20.0, tau_d=5.0),
-    weight_dependence=sim.AdditiveWeightDependence(),
+    weight_dependence=sim.MultiplicativeWeightDependence(A_plus=1, A_minus=1,
+        w_min=0, w_max=1),
     neuromodulation=True))
 
 # Create plastic connections between stimulation populations and observed
