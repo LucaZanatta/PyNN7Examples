@@ -69,8 +69,8 @@ n_stim_test = 5
 n_stim_pairing = 20
 dur_stim = 20
 
-pop_size = 14**2
-# pop_size=7**2
+# pop_size = 14**2
+pop_size=7**2
 
 ISI = 90.
 start_test_pre_pairing = 200.
@@ -168,12 +168,13 @@ stdp_model = sim.STDPMechanism(
                                                    A_plus=0.02, A_minus=0.02)
 )
 
-structure_model_w_stdp = sim.StructuralMechanism(stdp_model=stdp_model, weight=0.2, s_max=32,grid=[np.sqrt(pop_size), np.sqrt(pop_size)])
+structure_model_w_stdp = sim.StructuralMechanism(stdp_model=stdp_model, weight=0.2, s_max=32,grid=[np.sqrt(pop_size), np.sqrt(pop_size)],
+                                                 f_rew=1005)
 # structure_model_w_stdp = sim.StructuralMechanism(weight=.1, s_max=32, grid=[pop_size, 1])
 
 plastic_projection = sim.Projection(
     # pre_pop, post_pop, sim.FixedNumberPreConnector(32),
-    pre_pop, post_pop, sim.FixedProbabilityConnector(0.1),  # TODO what about starting from 0?
+    pre_pop, post_pop, sim.FixedProbabilityConnector(0.5),  # TODO what about starting from 0?
     synapse_dynamics=sim.SynapseDynamics(slow=structure_model_w_stdp),
     label="plastic_projection"
 )
