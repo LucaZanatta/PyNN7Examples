@@ -30,10 +30,9 @@ plastic_weights = 0.15
 rewards = [x for x in range(2000, 2010)] + \
           [x for x in range(3000, 3020)] + \
           [x for x in range(4000, 4100)]
-punishments = [x for x in range(5000, 5020)] + \
-              [x for x in range(7000, 7030)] + \
-              [x for x in range(8000, 8020)] + \
-              [x for x in range(9000, 9030)]
+punishments = [x for x in range(6000, 6010)] + \
+              [x for x in range(7000, 7020)] + \
+              [x for x in range(8000, 8040)]
 
 cell_params = {'cm': 0.25,
                'i_offset': 0.0,
@@ -68,17 +67,17 @@ for i in range(10):
     post_pops.append(sim.Population(1, sim.IF_curr_exp_supervision,
         cell_params, label='post'))
     reward_projections.append(sim.Projection(reward_pop, post_pops[i],
-        sim.OneToOneConnector(weights=0.0001),
+        sim.OneToOneConnector(weights=0.01),
         target='reward', label='reward synapses'))
     punishment_projections.append(sim.Projection(punishment_pop, post_pops[i],
-        sim.OneToOneConnector(weights=0.00005),
+        sim.OneToOneConnector(weights=0.002),
         target='punishment', label='punishment synapses'))
 
 # Create synapse dynamics with neuromodulated STDP.
 synapse_dynamics = sim.SynapseDynamics(slow=sim.STDPMechanism(
     timing_dependence=sim.SpikePairRule(
         tau_plus=2, tau_minus=1,
-        tau_c=20.0, tau_d=5.0),
+        tau_c=100.0, tau_d=5.0),
     weight_dependence=sim.MultiplicativeWeightDependence(A_plus=1, A_minus=1,
         w_min=0, w_max=1),
     neuromodulation=True))
@@ -98,7 +97,7 @@ sim.run(duration)
 
 def plot_spikes(spikes, title):
      if spikes is not None:
-         pylab.figure(figsize=(13,3))
+         pylab.figure(figsize=(15,5))
          pylab.xlim((0, duration))
          pylab.ylim((0, 11))
          pylab.plot([i[1] for i in spikes], [i[0] for i in spikes], ".")
@@ -118,7 +117,7 @@ for i in range(10):
         post_spikes.append([i+1, x[1]])
 
 plot_spikes(post_spikes, "post-synaptic neuron activity")
-pylab.plot(rewards, [0.5 for x in rewards], 'y^')
+pylab.plot(rewards, [0.5 for x in rewards], 'g^')
 pylab.plot(punishments, [0.5 for x in punishments], 'r^')
 pylab.show()
 
