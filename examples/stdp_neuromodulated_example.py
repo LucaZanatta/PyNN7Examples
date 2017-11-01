@@ -22,9 +22,9 @@ import numpy as np
 import pylab
 
 timestep = 1.0
-stim_rate = 200
+stim_rate = 50
 duration = 12000
-plastic_weights = 0.15
+plastic_weights = 1.5
 
 # Times of rewards and punishments
 rewards = [x for x in range(2000, 2010)] + \
@@ -32,7 +32,7 @@ rewards = [x for x in range(2000, 2010)] + \
           [x for x in range(4000, 4100)]
 punishments = [x for x in range(6000, 6010)] + \
               [x for x in range(7000, 7020)] + \
-              [x for x in range(8000, 8040)]
+              [x for x in range(8000, 8100)]
 
 cell_params = {'cm': 0.25,
                'i_offset': 0.0,
@@ -43,15 +43,16 @@ cell_params = {'cm': 0.25,
                'v_reset': -70.0,
                'v_rest': -65.0,
                'v_thresh': -50.0
-              }
+               }
 
 sim.setup(timestep=timestep)
 
 # Create a population of dopaminergic neurons for reward and punishment
 reward_pop = sim.Population(1, sim.SpikeSourceArray,
-    {'spike_times' : rewards}, label='reward')
+                            {'spike_times': rewards}, label='reward')
 punishment_pop = sim.Population(1, sim.SpikeSourceArray,
-    {'spike_times' : punishments}, label='punishment')
+                                {'spike_times': punishments},
+                                label='punishment')
 
 pre_pops = []
 stimulation = []
@@ -62,51 +63,55 @@ plastic_projections = []
 stim_projections = []
 
 for i in range(10):
-    stimulation.append(sim.Population(5, sim.SpikeSourcePoisson,
-        {'rate':stim_rate, 'duration':duration}, label="pre"))
-    post_pops.append(sim.Population(1, sim.IF_curr_exp_supervision,
-        cell_params, label='post'))
+    stimulation.append(sim.Population(1, sim.SpikeSourcePoisson,
+                       {'rate': stim_rate, 'duration': duration}, label="pre"))
+    post_pops.append(sim.Population(1,
+                                    sim.IF_curr_exp_izhikevich_neuromodulation,
+                                    cell_params, label='post'))
     reward_projections.append(sim.Projection(reward_pop, post_pops[i],
-        sim.OneToOneConnector(weights=0.01),
-        target='reward', label='reward synapses'))
+                              sim.OneToOneConnector(weights=0.05),
+                              target='reward', label='reward synapses'))
     punishment_projections.append(sim.Projection(punishment_pop, post_pops[i],
-        sim.OneToOneConnector(weights=0.002),
-        target='punishment', label='punishment synapses'))
+                                  sim.OneToOneConnector(weights=0.05),
+                                  target='punishment',
+                                  label='punishment synapses'))
 
 # Create synapse dynamics with neuromodulated STDP.
 synapse_dynamics = sim.SynapseDynamics(slow=sim.STDPMechanism(
-    timing_dependence=sim.SpikePairRule(
+    timing_dependence=sim.IzhikevichNeuromodulation(
         tau_plus=2, tau_minus=1,
         tau_c=100.0, tau_d=5.0),
     weight_dependence=sim.MultiplicativeWeightDependence(A_plus=1, A_minus=1,
-        w_min=0, w_max=1),
+                                                         w_min=0, w_max=20),
     neuromodulation=True))
 
 # Create plastic connections between stimulation populations and observed
 # neurons
 for i in range(10):
-    plastic_projections.append(sim.Projection(stimulation[i], post_pops[i],
-        sim.AllToAllConnector(weights=plastic_weights),
-        synapse_dynamics=synapse_dynamics,
-        target='excitatory', label='Pre-post projection'))
+    plastic_projections.append(
+        sim.Projection(stimulation[i], post_pops[i],
+                       sim.AllToAllConnector(weights=plastic_weights),
+                       synapse_dynamics=synapse_dynamics,
+                       target='excitatory',
+                       label='Pre-post projection'))
     post_pops[i].record()
 
 sim.run(duration)
 
 # Graphical diagnostics
 
-def plot_spikes(spikes, title):
-     if spikes is not None:
-         pylab.figure(figsize=(15,5))
-         pylab.xlim((0, duration))
-         pylab.ylim((0, 11))
-         pylab.plot([i[1] for i in spikes], [i[0] for i in spikes], ".")
-         pylab.xlabel('Time/ms')
-         pylab.ylabel('spikes')
-         pylab.title(title)
 
-     else:
-         print "No spikes received"
+def plot_spikes(spikes, title):
+    if spikes is not None:
+        pylab.figure(figsize=(15, 5))
+        pylab.xlim((0, duration))
+        pylab.ylim((0, 11))
+        pylab.plot([i[1] for i in spikes], [i[0] for i in spikes], ".")
+        pylab.xlabel('Time/ms')
+        pylab.ylabel('spikes')
+        pylab.title(title)
+    else:
+        print "No spikes received"
 
 post_spikes = []
 weights = []
