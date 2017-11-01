@@ -18,8 +18,6 @@ post-synaptic neurons to the same stimuli.
 
 import spynnaker7.pyNN as sim
 import pylab
-import numpy as np
-import pylab
 
 timestep = 1.0
 stim_rate = 50
@@ -112,6 +110,7 @@ def plot_spikes(spikes, title):
         pylab.title(title)
     else:
         print "No spikes received"
+
 
 post_spikes = []
 weights = []
