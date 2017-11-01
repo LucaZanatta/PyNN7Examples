@@ -8,7 +8,7 @@ except Exception as e:
 import pylab
 
 p.setup(timestep=1.0, min_delay=1.0, max_delay=32.0)
-p.set_number_of_neurons_per_core("IZK_curr_exp", 100)
+p.set_number_of_neurons_per_core(p.extra_models.IZK_curr_exp, 100)
 
 nNeurons = 200  # number of neurons in each population
 
@@ -37,8 +37,8 @@ for i in range(0, nNeurons):
 
 injectionConnection = [(0, 0, weight_to_spike, delay)]
 spikeArray = {'spike_times': [[50]]}
-populations.append(p.Population(nNeurons, p.IZK_curr_exp, cell_params_izk,
-                                label='pop_1'))
+populations.append(p.Population(nNeurons, p.extra_models.IZK_curr_exp,
+                                cell_params_izk, label='pop_1'))
 populations.append(p.Population(1, p.SpikeSourceArray, spikeArray,
                                 label='inputSpikes_1'))
 
