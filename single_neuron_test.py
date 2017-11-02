@@ -55,8 +55,8 @@ cell_params_lif_2E2I   = {'cm'        : 0.25, # nF was 0.25
                      'exc_b_tau' : T1,   # Was 2.0
                      'inh_a_tau' : 0.6,
                      'inh_b_tau' : 3.0,
-                     'v_reset'   : 0.0,
-                     'v_rest'    : 0.0,
+                     'v_reset'   : 0.5,
+                     'v_rest'    : 1.0,
                      'v_thresh'  : 20.0
                      }
 
