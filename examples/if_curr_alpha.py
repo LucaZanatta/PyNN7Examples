@@ -36,6 +36,3 @@ pylab.ylabel('current')
 pylab.plot(curr[:, 1], curr[:, 2])
 pylab.plot(curr[:, 1], curr[:, 3])
 pylab.show()
-
-
-
