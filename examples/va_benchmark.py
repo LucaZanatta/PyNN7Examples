@@ -199,8 +199,8 @@ pylab.figure()
 pylab.plot([i[1] for i in exc_spikes],
            [i[0] for i in exc_spikes], ".", markersize=2)
 pylab.xlabel('Time/ms')
-pylab.ylabel('spikes')
-pylab.title('spikes')
+pylab.ylabel('Neuron index')
+pylab.title('Vogels-Abbott benchmark: spikes')
 pylab.show()
 
 writeCPUTime = timer.diff()
