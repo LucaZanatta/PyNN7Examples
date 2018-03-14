@@ -30,13 +30,13 @@ Authors : Catherine Wacongne < catherine.waco@gmail.com >
 April 2013
 """
 
-
 import numpy as np
 import pylab
 
 from pacman.model.constraints.partitioner_constraints.partitioner_maximum_size_constraint import \
     PartitionerMaximumSizeConstraint
-from pacman.model.constraints.placer_constraints.placer_chip_and_core_constraint import PlacerChipAndCoreConstraint
+from pacman.model.constraints.placer_constraints.placer_chip_and_core_constraint import \
+    PlacerChipAndCoreConstraint
 
 import spynnaker7.pyNN as sim
 
@@ -70,7 +70,7 @@ n_stim_pairing = 20
 dur_stim = 20
 
 # pop_size = 14**2
-pop_size=7**2
+pop_size = 7 ** 2
 
 ISI = 90.
 start_test_pre_pairing = 200.
@@ -168,17 +168,19 @@ stdp_model = sim.STDPMechanism(
                                                    A_plus=0.02, A_minus=0.02)
 )
 
-structure_model_w_stdp = sim.StructuralMechanism(stdp_model=stdp_model, weight=0.2, s_max=32,grid=[np.sqrt(pop_size), np.sqrt(pop_size)],
-                                                 f_rew=1005)
-# structure_model_w_stdp = sim.StructuralMechanism(weight=.1, s_max=32, grid=[pop_size, 1])
+# structure_model_w_stdp = sim.StructuralMechanism(
+#     stdp_model=stdp_model, weight=0.2, s_max=32,
+#     grid=[np.sqrt(pop_size), np.sqrt(pop_size)], f_rew=1000)
+structure_model_w_stdp = sim.StructuralMechanism(
+    weight=.2, s_max=32, grid=[pop_size, 1], random_partner=True, f_rew=1000)
 
 plastic_projection = sim.Projection(
     # pre_pop, post_pop, sim.FixedNumberPreConnector(32),
-    pre_pop, post_pop, sim.FixedProbabilityConnector(0.5),  # TODO what about starting from 0?
+    pre_pop, post_pop, sim.FixedProbabilityConnector(0.1),
+    # TODO what about starting from 0?
     synapse_dynamics=sim.SynapseDynamics(slow=structure_model_w_stdp),
     label="plastic_projection"
 )
-
 
 # plastic_projection2 = sim.Projection(
 #     # pre_pop, post_pop, sim.FixedNumberPreConnector(32),
@@ -225,21 +227,22 @@ def plot_spikes(spikes, title):
     else:
         print "No spikes received"
 
+
 weights = plastic_projection._get_synaptic_data(False, 'weight')
 
 pre_spikes = pre_pop.getSpikes(compatible_output=True)
 post_spikes = post_pop.getSpikes(compatible_output=True)
 # End simulation on SpiNNaker
 sim.end()
-np.savez("structural_results_stdp", pre_spike=pre_spikes, post_spikes=post_spikes)
+# np.savez("structural_results_stdp",
+# pre_spike=pre_spikes,
+# post_spikes=post_spikes)
 
 plot_spikes(pre_spikes, "pre-synaptic")
 plot_spikes(post_spikes, "post-synaptic")
 pylab.show()
 
-
-
-f, ax1= pylab.subplots(1, 1, figsize=(8, 8))
+f, ax1 = pylab.subplots(1, 1, figsize=(8, 8))
 i = ax1.matshow(np.nan_to_num(weights.reshape(pop_size, pop_size)))
 ax1.grid(visible=False)
 ax1.set_title("Feedforward connectivity matrix", fontsize=16)
