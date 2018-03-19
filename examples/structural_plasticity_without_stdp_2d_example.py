@@ -199,7 +199,6 @@ sim.end()
 
 
 # Plotting spikes
-
 def plot_spikes(pre_spikes, post_spikes, title):
     plt.figure()
     plt.xlim((0, sim_time))
@@ -223,7 +222,6 @@ def plot_spikes(pre_spikes, post_spikes, title):
 plot_spikes(pre_spikes, post_spikes, "Pre- and post-synaptic spikes")
 
 # Plotting connectivity
-
 final_ff_conn_network = np.ones((pop_size, pop_size)) * np.nan
 final_ff_weight_network = np.ones((pop_size, pop_size)) * np.nan
 for source, target, weight, delay in pre_weights[-1]:
