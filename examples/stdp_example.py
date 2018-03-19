@@ -29,6 +29,7 @@ Authors : Catherine Wacongne < catherine.waco@gmail.com >
 April 2013
 """
 import pylab
+
 try:
     import pyNN.spiNNaker as sim
 except Exception as e:
@@ -55,7 +56,6 @@ cell_params = {'cm': 0.25,
                'v_thresh': -50.0
                }
 
-
 # Other simulation parameters
 e_rate = 80
 in_rate = 300
@@ -71,12 +71,12 @@ start_test_pre_pairing = 200.
 start_pairing = 1500.
 start_test_post_pairing = 700.
 
-simtime = (start_pairing + start_test_post_pairing
-           + ISI * (n_stim_pairing + n_stim_test) + 550.)
+sim_time = (start_pairing + start_test_post_pairing
+            + ISI * (n_stim_pairing + n_stim_test) + 550.)
 
 # Initialisations of the different types of populations
-IAddPre = []
-IAddPost = []
+i_add_pre = []
+i_add_post = []
 
 # +-------------------------------------------------------------------+
 # | Creation of neuron populations                                    |
@@ -89,71 +89,76 @@ post_pop = sim.Population(pop_size, model, cell_params)
 # Test of the effect of activity of the pre_pop population on the post_pop
 # population prior to the "pairing" protocol : only pre_pop is stimulated
 for i in range(n_stim_test):
-    IAddPre.append(sim.Population(pop_size,
-                                  sim.SpikeSourcePoisson,
-                                  {'rate': in_rate,
-                                   'start': start_test_pre_pairing + ISI * (i),
-                                   'duration': dur_stim
-                                   }))
+    i_add_pre.append(sim.Population(
+        pop_size,
+        sim.SpikeSourcePoisson,
+        {'rate': in_rate,
+         'start': start_test_pre_pairing + ISI * (i),
+         'duration': dur_stim
+         }))
 
 # Pairing protocol : pre_pop and post_pop are stimulated with a 10 ms
 # difference
 for i in range(n_stim_pairing):
-    IAddPre.append(sim.Population(pop_size,
-                                  sim.SpikeSourcePoisson,
-                                  {'rate': in_rate,
-                                   'start': start_pairing + ISI * (i),
-                                   'duration': dur_stim
-                                   }))
-    IAddPost.append(sim.Population(pop_size,
-                                   sim.SpikeSourcePoisson,
-                                   {'rate': in_rate,
-                                    'start': start_pairing + ISI * (i) + 10.,
-                                    'duration': dur_stim
-                                    }))
+    i_add_pre.append(sim.Population(
+        pop_size,
+        sim.SpikeSourcePoisson,
+        {'rate': in_rate,
+         'start': start_pairing + ISI * (i),
+         'duration': dur_stim
+         }))
+    i_add_post.append(sim.Population(
+        pop_size,
+        sim.SpikeSourcePoisson,
+        {'rate': in_rate,
+         'start': start_pairing + ISI * (i) + 10.,
+         'duration': dur_stim
+         }))
 
 # Test post pairing : only pre_pop is stimulated (and should trigger activity
 # in Post)
 for i in range(n_stim_test):
-    IAddPre.append(sim.Population(pop_size,
-                                  sim.SpikeSourcePoisson,
-                                  {'rate': in_rate,
-                                   'start': (start_pairing
-                                             + ISI * (n_stim_pairing)
-                                             + start_test_post_pairing
-                                             + ISI * (i)),
-                                   'duration': dur_stim
-                                   }))
+    i_add_pre.append(sim.Population(
+        pop_size,
+        sim.SpikeSourcePoisson,
+        {'rate': in_rate,
+         'start': (start_pairing
+                   + ISI * (n_stim_pairing)
+                   + start_test_post_pairing
+                   + ISI * (i)),
+         'duration': dur_stim
+         }))
 
 # Noise inputs
-INoisePre = sim.Population(pop_size,
-                           sim.SpikeSourcePoisson,
-                           {'rate': e_rate, 'start': 0, 'duration': simtime},
-                           label="expoisson")
-INoisePost = sim.Population(pop_size,
-                            sim.SpikeSourcePoisson,
-                            {'rate': e_rate, 'start': 0, 'duration': simtime},
-                            label="expoisson")
+i_noise_pre = sim.Population(
+    pop_size,
+    sim.SpikeSourcePoisson,
+    {'rate': e_rate, 'start': 0, 'duration': sim_time},
+    label="expoisson")
+i_noise_post = sim.Population(pop_size,
+                              sim.SpikeSourcePoisson,
+                              {'rate': e_rate, 'start': 0, 'duration': sim_time},
+                              label="expoisson")
 
 # +-------------------------------------------------------------------+
 # | Creation of connections                                           |
 # +-------------------------------------------------------------------+
 
 # Connection parameters
-JEE = 3.
+jee = 3.
 
 # Connection type between noise poisson generator and excitatory populations
-ee_connector = sim.OneToOneConnector(weights=JEE * 0.05)
+ee_connector = sim.OneToOneConnector(weights=jee * 0.05)
 
 # Noise projections
-sim.Projection(INoisePre, pre_pop, ee_connector, target='excitatory')
-sim.Projection(INoisePost, post_pop, ee_connector, target='excitatory')
+sim.Projection(i_noise_pre, pre_pop, ee_connector, target='excitatory')
+sim.Projection(i_noise_post, post_pop, ee_connector, target='excitatory')
 
 # Additional Inputs projections
-for i in range(len(IAddPre)):
-    sim.Projection(IAddPre[i], pre_pop, ee_connector, target='excitatory')
-for i in range(len(IAddPost)):
-    sim.Projection(IAddPost[i], post_pop, ee_connector, target='excitatory')
+for i in range(len(i_add_pre)):
+    sim.Projection(i_add_pre[i], pre_pop, ee_connector, target='excitatory')
+for i in range(len(i_add_post)):
+    sim.Projection(i_add_post[i], post_pop, ee_connector, target='excitatory')
 
 # Plastic Connections between pre_pop and post_pop
 stdp_model = sim.STDPMechanism(
@@ -180,7 +185,7 @@ pre_pop.record()
 post_pop.record()
 
 # Run simulation
-sim.run(simtime)
+sim.run(sim_time)
 
 print("Weights:", plastic_projection.getWeights())
 
@@ -188,14 +193,14 @@ print("Weights:", plastic_projection.getWeights())
 def plot_spikes(spikes, title):
     if spikes is not None:
         pylab.figure()
-        pylab.xlim((0, simtime))
+        pylab.xlim((0, sim_time))
         pylab.plot([i[1] for i in spikes], [i[0] for i in spikes], ".")
         pylab.xlabel('Time/ms')
         pylab.ylabel('spikes')
         pylab.title(title)
 
     else:
-        print "No spikes received"
+        print("No spikes received")
 
 
 pre_spikes = pre_pop.getSpikes(compatible_output=True)

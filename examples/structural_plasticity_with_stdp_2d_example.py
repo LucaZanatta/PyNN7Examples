@@ -56,89 +56,99 @@ start_test_pre_pairing = 200.
 start_pairing = 1500.
 start_test_post_pairing = 700.
 
-simtime = (start_pairing + start_test_post_pairing
-           + ISI * (n_stim_pairing + n_stim_test) + 550.)
+sim_time = (start_pairing + start_test_post_pairing
+            + ISI * (n_stim_pairing + n_stim_test) + 550.)
 
 # Initialisations of the different types of populations
-IAddPre = []
-IAddPost = []
+i_add_pre = []
+i_add_post = []
 
 # +---------------------------------------------------------------------------+
 # | Creation of neuron populations                                            |
 # +---------------------------------------------------------------------------+
 
 # Neuron populations
-pre_pop = sim.Population(pop_size, model, cell_params, label="PRE_SYN_POP")
-post_pop = sim.Population(pop_size, model, cell_params, label="STRUCTURAL_POP")
+pre_pop = sim.Population(pop_size, model, cell_params,
+                         label="PRE_SYN_POP")
+post_pop = sim.Population(pop_size, model, cell_params,
+                          label="STRUCTURAL_POP")
 
 # Test of the effect of activity of the pre_pop population on the post_pop
 # population prior to the "pairing" protocol : only pre_pop is stimulated
 for i in range(n_stim_test):
-    IAddPre.append(sim.Population(pop_size,
-                                  sim.SpikeSourcePoisson,
-                                  {'rate': in_rate,
-                                   'start': start_test_pre_pairing + ISI * (i),
-                                   'duration': dur_stim
-                                   }))
+    i_add_pre.append(sim.Population(
+        pop_size,
+        sim.SpikeSourcePoisson,
+        {'rate': in_rate,
+         'start': start_test_pre_pairing + ISI * (i),
+         'duration': dur_stim
+         }))
 
 # Pairing protocol : pre_pop and post_pop are stimulated with a 10 ms
 # difference
 for i in range(n_stim_pairing):
-    IAddPre.append(sim.Population(pop_size,
-                                  sim.SpikeSourcePoisson,
-                                  {'rate': in_rate,
-                                   'start': start_pairing + ISI * (i),
-                                   'duration': dur_stim
-                                   }))
-    IAddPost.append(sim.Population(pop_size,
-                                   sim.SpikeSourcePoisson,
-                                   {'rate': in_rate,
-                                    'start': start_pairing + ISI * (i) + 10.,
-                                    'duration': dur_stim
-                                    }))
+    i_add_pre.append(sim.Population(
+        pop_size,
+        sim.SpikeSourcePoisson,
+        {'rate': in_rate,
+         'start': start_pairing + ISI * (i),
+         'duration': dur_stim
+         }))
+    i_add_post.append(sim.Population(
+        pop_size,
+        sim.SpikeSourcePoisson,
+        {'rate': in_rate,
+         'start': start_pairing + ISI * (i) + 10.,
+         'duration': dur_stim
+         }))
 
 # Test post pairing : only pre_pop is stimulated (and should trigger activity
 # in Post)
 for i in range(n_stim_test):
-    IAddPre.append(sim.Population(pop_size,
-                                  sim.SpikeSourcePoisson,
-                                  {'rate': in_rate,
-                                   'start': (start_pairing
-                                             + ISI * (n_stim_pairing)
-                                             + start_test_post_pairing
-                                             + ISI * (i)),
-                                   'duration': dur_stim
-                                   }))
+    i_add_pre.append(sim.Population(
+        pop_size,
+        sim.SpikeSourcePoisson,
+        {'rate': in_rate,
+         'start': (start_pairing
+                   + ISI * (n_stim_pairing)
+                   + start_test_post_pairing
+                   + ISI * (i)),
+         'duration': dur_stim
+         }))
 
 # Noise inputs
-INoisePre = sim.Population(pop_size,
-                           sim.SpikeSourcePoisson,
-                           {'rate': e_rate, 'start': 0, 'duration': simtime},
-                           label="expoisson")
-INoisePost = sim.Population(pop_size,
-                            sim.SpikeSourcePoisson,
-                            {'rate': e_rate, 'start': 0, 'duration': simtime},
-                            label="expoisson")
+i_noise_pre = sim.Population(
+    pop_size,
+    sim.SpikeSourcePoisson,
+    {'rate': e_rate, 'start': 0,
+     'duration': sim_time},
+    label="expoisson")
+i_noise_post = sim.Population(
+    pop_size,
+    sim.SpikeSourcePoisson,
+    {'rate': e_rate, 'start': 0,
+     'duration': sim_time},
+    label="expoisson")
 
 # +---------------------------------------------------------------------------+
 # | Creation of connections                                                   |
 # +---------------------------------------------------------------------------+
 
 # Connection parameters
-JEE = 3.
+jee = 3.
 
 # Connection type between noise poisson generator and excitatory populations
-ee_connector = sim.OneToOneConnector(weights=JEE * 0.05)
+ee_connector = sim.OneToOneConnector(weights=jee * 0.05)
 
 # Noise projections
-sim.Projection(INoisePre, pre_pop, ee_connector, target='excitatory')
-sim.Projection(INoisePost, post_pop, ee_connector, target='excitatory')
+sim.Projection(i_noise_pre, pre_pop, ee_connector, target='excitatory')
+sim.Projection(i_noise_post, post_pop, ee_connector, target='excitatory')
 
 # Additional Inputs projections
-for i in range(len(IAddPre)):
-    sim.Projection(IAddPre[i], pre_pop, ee_connector, target='excitatory')
-for i in range(len(IAddPost)):
-    sim.Projection(IAddPost[i], post_pop, ee_connector, target='excitatory')
+for i in range(len(i_add_pre)):
+    sim.Projection(i_add_pre[i], pre_pop, ee_connector, target='excitatory')
+for i in range(len(i_add_post)):
+    sim.Projection(i_add_post[i], post_pop, ee_connector, target='excitatory')
 
 # Plastic Connections between pre_pop and post_pop
 stdp_model = sim.STDPMechanism(
@@ -151,8 +161,8 @@ structure_model_without_stdp = sim.StructuralMechanism(
     stdp_model=stdp_model,  # Wrap rewiring around STDP
     weight=0,  # Use this weights when creating a new synapse
     s_max=32,  # Maximum allowed fan-in per target-layer neuron
-    # grid=[pop_size, 1],
     grid=[np.sqrt(pop_size), np.sqrt(pop_size)],  # spatial org of neurons
+    # grid=[pop_size, 1], # 1d spatial org of neurons, uncomment this if wanted
     random_partner=True,  # Choose a partner neuron for formation at random,
     # as opposed to selecting one of the last neurons to have spiked
     f_rew=10 ** 4,  # Hz
@@ -180,7 +190,7 @@ pre_pop.record()
 post_pop.record()
 
 # Run simulation
-sim.run(simtime)
+sim.run(sim_time)
 
 # Retrieve connectivity information from SpiNNaker
 
@@ -200,10 +210,9 @@ sim.end()
 
 # Plotting spikes
 
-
 def plot_spikes(pre_spikes, post_spikes, title):
     plt.figure()
-    plt.xlim((0, simtime))
+    plt.xlim((0, sim_time))
     plt.xlabel('Time/ms')
     plt.ylabel('neuron id')
     plt.title(title)
