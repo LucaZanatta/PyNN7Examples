@@ -135,10 +135,11 @@ i_noise_pre = sim.Population(
     sim.SpikeSourcePoisson,
     {'rate': e_rate, 'start': 0, 'duration': sim_time},
     label="expoisson")
-i_noise_post = sim.Population(pop_size,
-                              sim.SpikeSourcePoisson,
-                              {'rate': e_rate, 'start': 0, 'duration': sim_time},
-                              label="expoisson")
+i_noise_post = sim.Population(
+    pop_size,
+    sim.SpikeSourcePoisson,
+    {'rate': e_rate, 'start': 0, 'duration': sim_time},
+    label="expoisson")
 
 # +-------------------------------------------------------------------+
 # | Creation of connections                                           |
