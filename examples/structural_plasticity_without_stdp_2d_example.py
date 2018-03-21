@@ -148,7 +148,7 @@ for i in range(len(i_add_post)):
 
 # Structurally plastic connection between pre_pop and post_pop
 
-structure_model_without_stdp = sim.StructuralMechanism(
+structure_model_without_stdp = sim.StructuralMechanismStatic(
     weight=.2,  # Use this weights when creating a new synapse
     s_max=32,  # Maximum allowed fan-in per target-layer neuron
     grid=[np.sqrt(pop_size), np.sqrt(pop_size)],  # spatial org of neurons
