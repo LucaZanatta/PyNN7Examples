@@ -157,7 +157,7 @@ stdp_model = sim.STDPMechanism(
                                                    A_plus=0.02, A_minus=0.02)
 )
 
-structure_model_without_stdp = sim.StructuralMechanism(
+structure_model_without_stdp = sim.StructuralMechanismSTDP(
     stdp_model=stdp_model,  # Wrap rewiring around STDP
     weight=0,  # Use this weights when creating a new synapse
     s_max=32,  # Maximum allowed fan-in per target-layer neuron
