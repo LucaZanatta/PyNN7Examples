@@ -5,12 +5,14 @@ A population of integrate-and-firing neurons with different input firing rates
 
 import numpy as np
 import matplotlib.pyplot as plt
-try:
-    import pyNN.spiNNaker as sim
-except Exception as e:
-    import spynnaker7.pyNN as sim
+#try:
+#    import pyNN.spiNNaker as sim
+#except Exception as e:
+#    import spynnaker7.pyNN as sim
+import spynnaker7.pyNN as sim
 
 sim.setup(timestep=1.0, min_delay=1.0)
+print("pyNN0.7 hbp neuro guidebook example")
 
 # create cells
 cell_params = {
