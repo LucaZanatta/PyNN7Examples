@@ -5,9 +5,9 @@ A population of integrate-and-firing neurons with different input firing rates
 
 import numpy as np
 import matplotlib.pyplot as plt
-#try:
+# try:
 #    import pyNN.spiNNaker as sim
-#except Exception as e:
+# except Exception as e:
 #    import spynnaker7.pyNN as sim
 import spynnaker7.pyNN as sim
 
